@@ -1,7 +1,8 @@
 package testconfiguration;
 
-import configuration.factory.BrowserFactory;
+import configuration.factory.DriverFactory;
 import configuration.properties.AllProperties;
+import models.BrowserOption;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,25 +11,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class TestBase {
-    public static WebDriver driver;
+    public WebDriver driver;
     private static final Logger logger = LoggerFactory.getLogger(TestBase.class);
     private static AllProperties allProperties;
-    private static BrowserFactory browserFactory;
+    private static DriverFactory driverFactory;
+    private static BrowserOption browserOption;
+
     @BeforeAll
     static void setupDriver() {
         allProperties = AllProperties.getInstance();
-        browserFactory = new BrowserFactory();
-        logger.info("Webdriver started successfully");
+        driverFactory = new DriverFactory();
+        browserOption = BrowserOption.valueOf(System.getProperty("browserName").toUpperCase());
     }
-
-    public WebDriver getDriver() {
-        return driver;
-    }
-
     @BeforeEach
     void setupStart() {
-        driver = browserFactory.getDriver();
+        driver = driverFactory.getDriver(browserOption);
     }
+
 
     @AfterEach
     void tearDown() {

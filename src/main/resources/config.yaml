@@ -7,8 +7,18 @@ browser:
 environments:
   testEnv:
     envName: testEnv
-    appUrl: https://www.filmweb.pl/
-    title: Filmweb - filmy takie jak Ty!
+    appUrl: http://146.59.32.4/index.php/
+    title: TesterSii
+    email: Johan23@test.pl
+    firstName: Johan
+    lastName: Tarkov
+    password: password
+    birthDate: 12/30/1994
+    searchValue: HUMMINGBIRD
+    filteredResultsText1: "There are "
+    filteredResultsText2: " products."
+    filtersLowestPrice: 9.00
+    filtersHighestPrice: 10.00
   intEnv:
     envName: intEnv
     appUrl: https://www.selenium.dev/
