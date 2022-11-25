@@ -4,11 +4,10 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Data
 @Getter
+@Data
 @Setter
 public class User {
-
     private String firstName;
     private String lastName;
     private String email;
@@ -27,14 +26,14 @@ public class User {
         this.email = email;
         this.password = password;
     }
-//
-//    public User(Builder builder) {
-//        this.firstName = firstName;
-//        this.lastName = lastName;
-//        this.email = email;
-//        this.password = password;
-//        this.birthDate = birthDate;
-//    }
+
+    public User(Builder builder) {
+        this.firstName = builder.firstName;
+        this.lastName = builder.lastName;
+        this.email = builder.email;
+        this.password = builder.password;
+        this.birthDate = builder.birthDate;
+    }
 
     @Override
     public String toString() {
@@ -54,29 +53,28 @@ public class User {
             return this;
         }
 
-        public Builder setLastName(String firstName) {
+        public Builder setLastName(String lastName) {
             this.lastName = lastName;
             return this;
         }
 
-        public Builder setEmail(String firstName) {
+        public Builder setEmail(String email) {
             this.email = email;
             return this;
         }
 
-        public Builder setPassword(String firstName) {
+        public Builder setPassword(String password) {
             this.password = password;
             return this;
         }
 
-        public Builder setBirthDate(String firstName) {
+        public Builder setBirthDate(String birthDate) {
             this.birthDate = birthDate;
             return this;
         }
 
         public User build() {
-            return new User(firstName, lastName, email, password, birthDate);
-//            return new User(this);
+            return new User(this);
         }
 
     }
