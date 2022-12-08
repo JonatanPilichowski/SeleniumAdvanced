@@ -9,6 +9,8 @@ import testconfiguration.Pages;
 import java.util.Collections;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class SearchTests extends Pages {
 
     @Test
@@ -18,11 +20,13 @@ public class SearchTests extends Pages {
     @DisplayName("Standard search test (generic)")
     public void searchRandomItem() {
         int initialProductsActualCount = productsListPage.getNumberOfProducts();
-        softly.assertThat(initialProductsActualCount).isNotEqualTo(0);
+        assertThat(initialProductsActualCount).isNotZero();
+
         String randomProductText = productsListPage.getNameForRandomProduct();
         topMenuPage.clickOnSearchInput();
         topMenuPage.insertTextToInputAndSearch(randomProductText);
         List<String> allResultItems = productsListPage.getAllItemsName();
+
         softly.assertThat(allResultItems).isEqualTo(Collections.singletonList(randomProductText));
         softly.assertAll();
     }
