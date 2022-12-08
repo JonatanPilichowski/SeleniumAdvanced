@@ -38,7 +38,7 @@ public class User {
     @Override
     public String toString() {
         return "User [first name: " + firstName + ", last name: " + lastName + ", email: " + email
-                + ", password: " + password + ", date of birth: " + birthDate + "]";
+                + ", password: " + password + ", date of birth: " + birthDate + " ]";
     }
 
     public static class Builder {
