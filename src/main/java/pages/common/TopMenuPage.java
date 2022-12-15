@@ -16,27 +16,23 @@ public class TopMenuPage extends PageBase {
 
     private static final Logger logger = LoggerFactory.getLogger(TopMenuPage.class);
     @FindBy(css = "#search_widget [type='text']")
-    WebElement searchInput;
+    private WebElement searchInput;
     @FindBy(css = "button[type='submit']")
-    WebElement searchBtn;
+    private WebElement searchBtn;
     @FindBy(css = "#ui-id-1 .product")
-    List<WebElement> searchDropdownList;
+    private List<WebElement> searchDropdownList;
     @FindBy(css = "#top-menu > li")
-    List<WebElement> categories;
+    private List<WebElement> categories;
 
     @FindBy(css = "#category-9")
-    WebElement artCategory;
+    private WebElement artCategory;
 
     public TopMenuPage(WebDriver driver) {
         super(driver);
     }
 
-    public List<WebElement> getCategories() {
-        return categories;
-    }
-
     public void openCategoryByName(String categoryName) {
-        for (WebElement category : getCategories()) {
+        for (WebElement category : categories) {
             if (category.getText().trim().equals(categoryName)) {
                 click(category);
                 break;
@@ -46,7 +42,9 @@ public class TopMenuPage extends PageBase {
 
     public void openArtCategory() {
         click(artCategory);
+        logger.info(">>>>>>>>> Clicked on: "+ artCategory.getText());
     }
+
 
     public List<String> getCategoriesNames() {
         List<String> categoriesNames = new ArrayList<>();
@@ -57,18 +55,19 @@ public class TopMenuPage extends PageBase {
     }
 
 
-    public void clickOnSearchInput() {
+    public void focusOnSearch() {
         click(searchInput);
         logger.info("Clicked on search input field");
     }
 
-    public void insertTextToInput(String text) {
+    public void insertTextToSearch(String text) {
         sendKeysWithClear(searchInput, text);
         logger.info("Text: " + text + " was inserted to the search");
+        waitUntilDropdownSearchLoads();
     }
 
-    public void insertTextToInputAndSearch(String text) {
-        insertTextToInput(text);
+    public void searchForProduct(String text) {
+        insertTextToSearch(text);
         click(searchBtn);
         logger.info("Searching, should move to search results");
     }
@@ -88,10 +87,6 @@ public class TopMenuPage extends PageBase {
             searchDropdownTexts.add(element.getText());
         }
         return searchDropdownTexts;
-    }
-
-    public int countDropdownTextsContainingSearchValue() {
-        return countElementsInListContainingText(searchDropdownList, System.getProperty("searchValue"));
     }
 
 }

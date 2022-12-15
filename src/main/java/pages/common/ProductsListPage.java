@@ -9,8 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.base.PageBase;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProductsListPage extends PageBase {
 
@@ -34,30 +34,21 @@ public class ProductsListPage extends PageBase {
         return getRandomElement(productsNamesList);
     }
 
-    public String getNameForRandomProduct() {
-        return getNameOfItemFrom(getRandomItemFromList());
+    public String getNameOfItemFrom(WebElement element) {
+        return element.findElement(By.cssSelector("a")).getAttribute("textContent");
     }
 
-    public void openRandomItem() {
-        WebElement item = getRandomElement(productsNamesList);
-        logger.info("Clicking on: " + item.getText());
-        click(item);
+    public String getNameForRandomProduct() {
+        return getNameOfItemFrom(getRandomItemFromList());
     }
 
     public int getNumberOfProducts() {
         return getAllItems().size();
     }
 
-    public String getFirstItemName() {
-        return getNameOfItemFrom(productsNamesList.get(0));
-    }
 
     public List<String> getAllItemsName() {
-        List<String> allItemsName = new ArrayList<>();
-        for (WebElement item : productsNamesList) {
-            allItemsName.add(item.getText());
-        }
-        return allItemsName;
+        return productsNamesList.stream().map(WebElement::getText).collect(Collectors.toList());
     }
 
     public void waitForProductsToLoad() {
@@ -69,12 +60,9 @@ public class ProductsListPage extends PageBase {
     }
 
     public List<Double> getProductPrices() {
-        List<Double> productPrices = new ArrayList<>();
+        waitForProductsToLoad();
         List<WebElement> productsPricesList = getProductsPricesList();
-        for (WebElement price : productsPricesList) {
-            productPrices.add(Double.parseDouble(price.getText().replace("$", "")));
-        }
-        return productPrices;
+        return productsPricesList.stream().map(this::getPrice).collect(Collectors.toList());
     }
 
 }

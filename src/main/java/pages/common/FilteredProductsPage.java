@@ -1,5 +1,6 @@
 package pages.common;
 
+import models.Direction;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -12,26 +13,18 @@ import pages.base.PageBase;
 public class FilteredProductsPage extends PageBase {
 
     @FindBy(css = ".total-products")
-    WebElement productResultsTotalNumber;
+    private WebElement productResultsTotalNumber;
     @FindBy(css = "#js-active-search-filters .filter-block")
-    WebElement priceFilterActualValue;
+    private WebElement priceFilterActualValue;
     @FindBy(css = ".faceted-slider p")
-    WebElement priceFilterValues;
+    private WebElement priceFilterValues;
     @FindBy(css = ".ui-slider a:first-of-type")
-    WebElement leftPricesSlider;
+    private WebElement leftSlider;
     @FindBy(css = ".ui-slider a:last-of-type")
-    WebElement rightPricesSlider;
+    private WebElement rightSlider;
 
     public FilteredProductsPage(WebDriver driver) {
         super(driver);
-    }
-
-    public WebElement getLeftPricesSlider() {
-        return leftPricesSlider;
-    }
-
-    public WebElement getRightPricesSlider() {
-        return rightPricesSlider;
     }
 
     public String getResultsText() {
@@ -43,68 +36,45 @@ public class FilteredProductsPage extends PageBase {
     }
 
     public void moveLeftSliderToPrice(double price) {
-        double sliderValue = getLeftSliderValue();
-        WebElement leftSliderPrices = getLeftPricesSlider();
-        if ((price - sliderValue) >= 0) {
-            for (int i = 0; i < (price - sliderValue); i++) {
-                waitForSliderToBeAvailable();
-                leftSliderPrices.sendKeys(Keys.ARROW_RIGHT);
-            }
-        } else {
-            for (int i = 0; i < (sliderValue - price); i++) {
-                waitForSliderToBeAvailable();
-                leftSliderPrices.sendKeys(Keys.ARROW_LEFT);
-            }
-        }
+        movePricesSlider(Direction.LEFT, price);
     }
 
     public void moveRightSliderToPrice(double price) {
-        double sliderValue = getRightSliderValue();
-        WebElement rightPricesSlider = getRightPricesSlider();
-        if ((price - sliderValue) >= 0) {
-            for (int i = 0; i < (price - sliderValue); i++) {
-                waitForSliderToBeAvailable();
-                rightPricesSlider.sendKeys(Keys.ARROW_RIGHT);
-            }
-        } else {
-            for (int i = 0; i < (sliderValue - price); i++) {
-                waitForSliderToBeAvailable();
-                rightPricesSlider.sendKeys(Keys.ARROW_LEFT);
-            }
+        movePricesSlider(Direction.RIGHT, price);
+    }
+
+    private void movePricesSlider(Direction direction, double price) {
+        double sliderValue = direction == Direction.LEFT ? getLeftSliderValue() : getRightSliderValue();
+        WebElement slider = direction == Direction.LEFT ? leftSlider : rightSlider;
+        if (price == sliderValue) {
+            return;
         }
+
+        if (price - sliderValue > 0) {
+            sendKeyToSlider(slider, price - sliderValue, Keys.ARROW_RIGHT);
+        } else {
+            sendKeyToSlider(slider, sliderValue - price, Keys.ARROW_LEFT);
+        }
+        waitForFilteredPageToReload();
     }
 
-    public String getActivePriceFilterText() {
-        return priceFilterActualValue.getText();
-    }
-
-    public void waitForPageToReload() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".filter-block")));
-    }
-
-    public void waitForSliderToBeAvailable() {
-        wait.until((ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(".spinner"))));
-        wait.until((ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".ui-slider a:last-of-type"))));
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(".ui-slider a:first-of-type")));
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(".ui-slider a:last-of-type")));
+    private void sendKeyToSlider(WebElement element, double count, Keys key) {
+        for (int i = 0; i < count; i++) {
+            waitForFilteredPageToReload();
+            element.sendKeys(key);
+        }
     }
 
     public void waitForFilteredPageToReload() {
         wait.until((ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(".spinner"))));
     }
 
-    public String getPriceFilterText() {
-        return priceFilterValues.getText();
-    }
-
     public double getLeftSliderValue() {
-        String priceFilterText = getPriceFilterText();
-        return Double.parseDouble(StringUtils.substringBetween(priceFilterText, "$", " -"));
+        return Double.parseDouble(StringUtils.substringBetween(priceFilterValues.getText(), "$", " -"));
     }
 
     public Double getRightSliderValue() {
-        String priceFilterText = getPriceFilterText();
-        return Double.parseDouble(StringUtils.substringAfterLast(priceFilterText, "$"));
+        return Double.parseDouble(StringUtils.substringAfterLast(priceFilterValues.getText(), "$"));
     }
 
 

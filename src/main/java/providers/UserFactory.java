@@ -9,32 +9,22 @@ public class UserFactory {
     public User getRandomUser() {
         SimpleDateFormat correctFormat = new SimpleDateFormat("dd/MM/yyyy");
         Faker faker = new Faker();
-        String firstName = faker.name().firstName();
-        String lastName = faker.name().lastName();
-        String email = faker.internet().emailAddress();
-        String password = faker.internet().password(5, 15);
-        String birthDate = correctFormat.format(faker.date().birthday());
         return new User.Builder()
-                .setFirstName(firstName)
-                .setLastName(lastName)
-                .setEmail(email)
-                .setPassword(password)
-                .setBirthDate(birthDate)
+                .setFirstName(faker.name().firstName())
+                .setLastName(faker.name().lastName())
+                .setEmail(faker.internet().emailAddress())
+                .setPassword(faker.internet().password(5, 15))
+                .setBirthDate(correctFormat.format(faker.date().birthday()))
                 .build();
     }
 
     public User getAlreadyRegisteredUser() {
-        String firstName = System.getProperty("firstName");
-        String lastName = System.getProperty("lastName");
-        String email = System.getProperty("email");
-        String password = System.getProperty("password");
-        String birthDate = System.getProperty("birthDate");
         return new User.Builder()
-                .setFirstName(firstName)
-                .setLastName(lastName)
-                .setEmail(email)
-                .setPassword(password)
-                .setBirthDate(birthDate)
+                .setFirstName(System.getProperty("firstName"))
+                .setLastName(System.getProperty("lastName"))
+                .setEmail(System.getProperty("email"))
+                .setPassword(System.getProperty("password"))
+                .setBirthDate(System.getProperty("birthDate"))
                 .build();
     }
 

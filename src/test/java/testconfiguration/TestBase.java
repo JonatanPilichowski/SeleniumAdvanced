@@ -11,11 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class TestBase {
-    public WebDriver driver;
     private static final Logger logger = LoggerFactory.getLogger(TestBase.class);
     private static AllProperties allProperties;
     private static DriverFactory driverFactory;
     private static BrowserOption browserOption;
+    public WebDriver driver;
 
     @BeforeAll
     static void setupDriver() {
@@ -23,6 +23,7 @@ public class TestBase {
         driverFactory = new DriverFactory();
         browserOption = BrowserOption.valueOf(System.getProperty("browserName").toUpperCase());
     }
+
     @BeforeEach
     void setupStart() {
         driver = driverFactory.getDriver(browserOption);
