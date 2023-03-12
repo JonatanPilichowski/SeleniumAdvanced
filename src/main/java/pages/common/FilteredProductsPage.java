@@ -10,6 +10,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pages.base.PageBase;
 
+import java.math.BigDecimal;
+
 public class FilteredProductsPage extends PageBase {
 
     @FindBy(css = ".total-products")
@@ -35,25 +37,25 @@ public class FilteredProductsPage extends PageBase {
         return Integer.parseInt(productResultsTotalNumber.getText().replaceAll("\\D", ""));
     }
 
-    public void moveLeftSliderToPrice(double price) {
+    public void moveLeftSliderToPrice(BigDecimal price) {
         movePricesSlider(Direction.LEFT, price);
     }
 
-    public void moveRightSliderToPrice(double price) {
+    public void moveRightSliderToPrice(BigDecimal price) {
         movePricesSlider(Direction.RIGHT, price);
     }
 
-    private void movePricesSlider(Direction direction, double price) {
-        double sliderValue = direction == Direction.LEFT ? getLeftSliderValue() : getRightSliderValue();
+    private void movePricesSlider(Direction direction, BigDecimal price) {
+        BigDecimal sliderValue = direction == Direction.LEFT ? getLeftSliderValue() : getRightSliderValue();
         WebElement slider = direction == Direction.LEFT ? leftSlider : rightSlider;
-        if (price == sliderValue) {
+        if (price.compareTo(sliderValue) == 0 ) {
             return;
         }
 
-        if (price - sliderValue > 0) {
-            sendKeyToSlider(slider, price - sliderValue, Keys.ARROW_RIGHT);
+        if (price.compareTo(sliderValue) > 0) {
+            sendKeyToSlider(slider, price.subtract(sliderValue).doubleValue(), Keys.ARROW_RIGHT);
         } else {
-            sendKeyToSlider(slider, sliderValue - price, Keys.ARROW_LEFT);
+            sendKeyToSlider(slider, sliderValue.subtract(price).doubleValue(), Keys.ARROW_LEFT);
         }
         waitForFilteredPageToReload();
     }
@@ -69,12 +71,12 @@ public class FilteredProductsPage extends PageBase {
         wait.until((ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(".spinner"))));
     }
 
-    public double getLeftSliderValue() {
-        return Double.parseDouble(StringUtils.substringBetween(priceFilterValues.getText(), "$", " -"));
+    public BigDecimal getLeftSliderValue() {
+        return new BigDecimal(StringUtils.substringBetween(priceFilterValues.getText(), "$", " -"));
     }
 
-    public Double getRightSliderValue() {
-        return Double.parseDouble(StringUtils.substringAfterLast(priceFilterValues.getText(), "$"));
+    public BigDecimal getRightSliderValue() {
+        return new BigDecimal(StringUtils.substringAfterLast(priceFilterValues.getText(), "$"));
     }
 
 

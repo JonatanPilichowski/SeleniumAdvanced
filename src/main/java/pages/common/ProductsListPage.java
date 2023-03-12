@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.base.PageBase;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,15 @@ public class ProductsListPage extends PageBase {
 
     public WebElement getRandomItemFromList() {
         return getRandomElement(productsNamesList);
+    }
+
+    public void openRandomProduct(){
+        click(getRandomItemFromList());
+    }
+
+    public void openProductNamed(String productName){
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector(".product-title")));
+        productsNamesList.stream().filter(product -> product.getText().equals(productName)).findFirst().ifPresent(WebElement::click);
     }
 
     public String getNameOfItemFrom(WebElement element) {
@@ -59,7 +69,7 @@ public class ProductsListPage extends PageBase {
         return productsPricesList;
     }
 
-    public List<Double> getProductPrices() {
+    public List<BigDecimal> getProductPrices() {
         waitForProductsToLoad();
         List<WebElement> productsPricesList = getProductsPricesList();
         return productsPricesList.stream().map(this::getPrice).collect(Collectors.toList());

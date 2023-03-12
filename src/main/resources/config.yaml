@@ -15,6 +15,11 @@ environments:
     password: password
     birthDate: 12/30/1994
     searchValue: HUMMINGBIRD
+    basketTestProduct: THE BEST IS YET POSTER
+    basketProductsAmount: 3
+    basketProductPrice: "29.00"
+    basketText1: "There are "
+    basketText2: " items in your cart."
     filteredResultsText1: "There are "
     filteredResultsText2: " products."
     filtersLowestPrice: 9.00

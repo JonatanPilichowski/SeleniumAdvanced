@@ -23,28 +23,28 @@ public class TopMenuPage extends PageBase {
     private List<WebElement> searchDropdownList;
     @FindBy(css = "#top-menu > li")
     private List<WebElement> categories;
-
     @FindBy(css = "#category-9")
     private WebElement artCategory;
+    @FindBy(css = ".logo")
+    private WebElement myStore;
+
+    @FindBy(css = "#_desktop_cart .shopping-cart")
+    private WebElement cartIcon;
+
+    public void openCart(){click(cartIcon);}
+    public void openHomePage(){click(myStore);}
 
     public TopMenuPage(WebDriver driver) {
         super(driver);
     }
 
     public void openCategoryByName(String categoryName) {
-        for (WebElement category : categories) {
-            if (category.getText().trim().equals(categoryName)) {
-                click(category);
-                break;
-            }
-        }
+        categories.stream().filter(category -> category.getText().trim().equals(categoryName)).findFirst().ifPresent(this::click);
     }
 
     public void openArtCategory() {
         click(artCategory);
-        logger.info(">>>>>>>>> Clicked on: "+ artCategory.getText());
     }
-
 
     public List<String> getCategoriesNames() {
         List<String> categoriesNames = new ArrayList<>();
@@ -53,7 +53,6 @@ public class TopMenuPage extends PageBase {
         }
         return categoriesNames;
     }
-
 
     public void focusOnSearch() {
         click(searchInput);
@@ -72,7 +71,6 @@ public class TopMenuPage extends PageBase {
         logger.info("Searching, should move to search results");
     }
 
-
     public int countResultsInDropdown() {
         return getSearchDropdownTexts().size();
     }
@@ -88,5 +86,4 @@ public class TopMenuPage extends PageBase {
         }
         return searchDropdownTexts;
     }
-
 }

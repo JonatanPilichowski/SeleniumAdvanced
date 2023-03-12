@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.List;
 import java.util.Random;
@@ -29,7 +30,7 @@ public class PageBase {
 
     public void click(WebElement element) {
         element.click();
-        logger.info(">>>>>>>>>>> Clicked on the element: " + element);
+        logger.info(">>>>>>>>>>> Clicked on the element: " + element.getText());
     }
 
     public void sendKeys(WebElement element, String text) {
@@ -52,7 +53,7 @@ public class PageBase {
         logger.info(">>>>>>>>>>> Added text: ['" + text + "'] to: " + element.getText());
     }
 
-    public Double getPrice(WebElement element) {
-        return Double.parseDouble(element.getText().replace("$", ""));
+    public BigDecimal getPrice(WebElement element) {
+        return new BigDecimal(element.getText().replace("$", ""));
     }
 }
